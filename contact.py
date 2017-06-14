@@ -9,6 +9,9 @@ yellow = '\033[0;33m'
 puple = '\033[0;35m'
 backgroud = '\033[0m'
 
+title = (puple, backgroud)
+info = (yellow, backgroud)
+
 contant = "\n\033[0;35mname\033[0m: \033[0;33m{}\033[0m\
            \n\033[0;35mphone number\033[0m: \033[0;33m{}\033[0m\
            \n\033[0;35mother\033[0m: \033[0;33m{}\033[0m\n"
@@ -22,16 +25,16 @@ class Contact:
         self.c = self.conn.cursor()
 
     def add(self):
-        name = input('Please input name: ')
-        phone_num = input('Please input phone_num: ')
-        other = input('Other messages?(optional) ')
+        name = input('{}Please input name:{} '.format(*title))
+        phone_num = input('{}Please input phone_num:{} '.format(*title))
+        other = input('{}Other messages?(optional){} '.format(*title))
         print('\n\n')
 
         contant = (name, phone_num, other)
         self.c.execute("INSERT INTO CONTACT VALUES(?, ?, ?)", contant)
         self.conn.commit()
 
-        print('info added')
+        print('{}contact added{}'.format(*title))
 
     def search(self):
         query = input('What do you want to search? ')
@@ -180,3 +183,6 @@ else:
             contact.conn.close()
             print('Bye have a good time')
             sys.exit(0)
+
+        else:
+            print('\n\n? What do you want?')
