@@ -3,6 +3,11 @@
 import sqlite3
 import sys
 
+
+contant = "name: {}\
+         \nphone number: {}\
+         \nother: {}"
+
 class Contact:
     def __init__(self):
         self.conn = sqlite3.connect('contact.db')
@@ -10,8 +15,9 @@ class Contact:
 
     def add(self):
         name = input('Please input name: ')
-        phone_num = int(input('Please input phone_num: '))
+        phone_num = input('Please input phone_num: ')
         other = input('Other messages?(optional) ')
+        print('\n\n')
 
         contant = (name, phone_num, other)
         self.c.execute("INSERT INTO CONTACT VALUES(?, ?, ?)", contant)
@@ -21,24 +27,32 @@ class Contact:
 
     def search(self):
         query = input('What do you want to search? ')
+        print('\n\n')
         query = (query, query, query)
         self.c.execute("SELECT * FROM CONTACT WHERE NAME = ? OR PHONE_NUM = ? OR OTHER = ?", query)
+        result = self.c.fetchone()
 
-        print(self.c.fetchone())
+        if type(reslut) == tuple:
+            print(contant.format(*result))
+
+        else:
+            print('Sorry~ No result')
+
 
     def delete(self):
         query = input('Who do you want to forget? ')
 
-        self.c.execute("SELECT * FROM CONTACT WHER NAME = ?", (query,))
+        self.c.execute("SELECT * FROM CONTACT WHERE NAME = ?", (query,))
         print(self.c.fetchone())
 
         ask = input("Do you want to forget him/her? tell me (yes) or (no)")
-        if ask == 'yes' or 'Yes' or 'YES':
+        print('\n\n')
+        if ask.lower() == 'yes':
             self.c.execute("DELETE FROM CONTACT WHERE NAME = ?", (query,))
             self.conn.commit()
             print('You just have forgotten someone')
 
-        elif ask == 'no' or 'No' or 'NO':
+        elif ask.lower() == 'no':
             print("You still can't forget him/her, right?")
 
     def update(self):
@@ -62,7 +76,11 @@ class Contact:
             return 0
 
         self.conn.commit()
+        print('\n\n')
         print('info updated')
+
+    def list(self):
+        pass
 
 
 if __name__ == '__main__':
