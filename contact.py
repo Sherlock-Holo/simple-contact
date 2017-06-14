@@ -114,7 +114,7 @@ if __name__ == '__main__':
     if len(sys.argv) == 2:
         if sys.argv[1] == ('-h' or '--help'):
             # debug
-            print(sys.argv[1])
+            #print(sys.argv[1])
 
             print('contact.py [db file]\
                  \nTips: If you run contact.py first time, please run db_init.py at first\
