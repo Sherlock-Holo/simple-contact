@@ -3,19 +3,20 @@
 import sqlite3
 import sys
 
-
 # color
 yellow = '\033[0;33m'
 puple = '\033[0;35m'
 backgroud = '\033[0m'
 
 contant = "\n\033[0;35mname\033[0m: \033[0;33m{}\033[0m\
-         \n\033[0;35mphone number\033[0m: \033[0;33m{}\033[0m\
-         \n\033[0;35mother\033[0m: \033[0;33m{}\033[0m\n"
+           \n\033[0;35mphone number\033[0m: \033[0;33m{}\033[0m\
+           \n\033[0;35mother\033[0m: \033[0;33m{}\033[0m\n"
+
 
 class Contact:
-    def __init__(self):
-        self.conn = sqlite3.connect('contact.db')
+    def __init__(self, db='contact.db'):
+        self.db = db
+        self.conn = sqlite3.connect(self.db)
         self.c = self.conn.cursor()
 
     def add(self):
@@ -76,15 +77,18 @@ class Contact:
 
             if new_contant == 'name':
                 new_name = input('tell me new name ')
-                self.c.execute("UPDATE CONTACT SET NAME = ? WHERE NAME = ?", (new_name, name))
+                self.c.execute("UPDATE CONTACT SET NAME = ? WHERE NAME = ?",
+                               (new_name, name))
 
             elif new_contant == 'phone':
                 new_ph_num = input('tell me new phone number: ')
-                self.c.execute("UPDATE CONTACT SET PHONE_NUM = ? WHERE NAME = ?", (new_ph_num, name))
+                self.c.execute("UPDATE CONTACT SET PHONE_NUM = ? WHERE NAME = ?",
+                               (new_ph_num, name))
 
             elif new_contant == 'other':
                 new_other = input('tell me new other messages')
-                self.c.execute("UPDATE CONTACT SET OTHER = ? WHERE NAME = ?", (new_other, name))
+                self.c.execute("UPDATE CONTACT SET OTHER = ? WHERE NAME = ?",
+                               (new_other, name))
 
             else:
                 print("? what did you say? I don't know")
@@ -107,14 +111,35 @@ class Contact:
 
 
 if __name__ == '__main__':
-    contact = Contact()
+    if len(sys.argv) == 2:
+        if sys.argv[1] == ('-h' or '--help'):
+            # debug
+            print(sys.argv[1])
+
+            print('contact.py [db file]\
+                 \nTips: If you run contact.py first time, please run db_init.py at first\
+                 \n        -h --help    show this help and exit\
+                 \n        [db file]    use your database')
+
+            sys.exit(0)
+
+        else:
+            contact = Contact(sys.argv[1])
+
+    elif len(sys.argv) == 1:
+        contact = Contact()
+
+    else:
+        sys.exit(1)
+
+
     while True:
         start = "\n\
                \n1. add new Contact Person\
                \n2. search info\
                \n3. forget someone\
                \n4. update info\
-               \n5. list all contact\
+               \n5. list all contacts\
                \n6. exit\n"
 
         print(start)
