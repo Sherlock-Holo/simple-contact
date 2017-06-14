@@ -4,9 +4,14 @@ import sqlite3
 import sys
 
 
-contant = "name: {}\
-         \nphone number: {}\
-         \nother: {}"
+# color
+yellow = '\033[0;33m'
+puple = '\033[0;35m'
+backgroud = '\033[0m'
+
+contant = "\n\033[0;35mname\033[0m: \033[0;33m{}\033[0m\
+         \n\033[0;35mphone number\033[0m: \033[0;33m{}\033[0m\
+         \n\033[0;35mother\033[0m: \033[0;33m{}\033[0m\n"
 
 class Contact:
     def __init__(self):
@@ -32,7 +37,7 @@ class Contact:
         self.c.execute("SELECT * FROM CONTACT WHERE NAME = ? OR PHONE_NUM = ? OR OTHER = ?", query)
         result = self.c.fetchone()
 
-        if type(reslut) == tuple:
+        if type(result) == tuple:
             print(contant.format(*result))
 
         else:
@@ -43,7 +48,12 @@ class Contact:
         query = input('Who do you want to forget? ')
 
         self.c.execute("SELECT * FROM CONTACT WHERE NAME = ?", (query,))
-        print(self.c.fetchone())
+        result = self.c.fetchone()
+        if type(result) == tuple:
+            print(contant.format(*result))
+
+        else:
+            print('Sorry~ No result')
 
         ask = input("Do you want to forget him/her? tell me (yes) or (no)")
         print('\n\n')
@@ -57,30 +67,43 @@ class Contact:
 
     def update(self):
         name = input('You have new info about who? ')
-        new_contant = input('What do you want to update, name, phone or other? ')
+        self.c.execute("SELECT * FROM CONTACT WHERE NAME = ?", (name,))
+        result = self.c.fetchone()
+        if type(result) == tuple:
+            print(contant.format(*result))
 
-        if new_contant == 'name':
-            new_name = input('tell me new name ')
-            self.c.execute("UPDATE CONTACT SET NAME = ? WHERE NAME = ?", (new_name, name))
+            new_contant = input('What do you want to update, name, phone or other? ')
 
-        elif new_contant == 'phone':
-            new_ph_num = input('tell me new phone number: ')
-            self.c.execute("UPDATE CONTACT SET PHONE_NUM = ? WHERE NAME = ?", (new_ph_num, name))
+            if new_contant == 'name':
+                new_name = input('tell me new name ')
+                self.c.execute("UPDATE CONTACT SET NAME = ? WHERE NAME = ?", (new_name, name))
 
-        elif new_contant == 'other':
-            new_other = input('tell me new other messages')
-            self.c.execute("UPDATE CONTACT SET OTHER = ? WHERE NAME = ?", (new_other, name))
+            elif new_contant == 'phone':
+                new_ph_num = input('tell me new phone number: ')
+                self.c.execute("UPDATE CONTACT SET PHONE_NUM = ? WHERE NAME = ?", (new_ph_num, name))
+
+            elif new_contant == 'other':
+                new_other = input('tell me new other messages')
+                self.c.execute("UPDATE CONTACT SET OTHER = ? WHERE NAME = ?", (new_other, name))
+
+            else:
+                print("? what did you say? I don't know")
+                return 0
+
+            self.conn.commit()
+            print('\n\n')
+            print('info updated')
 
         else:
-            print("? what did you say? I don't know")
+            print('ah? Who did you say?')
             return 0
 
-        self.conn.commit()
-        print('\n\n')
-        print('info updated')
+
 
     def list(self):
-        pass
+        self.c.execute("SELECT * FROM CONTACT")
+        for p in self.c.fetchall():
+            print(contant.format(*p))
 
 
 if __name__ == '__main__':
@@ -91,7 +114,8 @@ if __name__ == '__main__':
                \n2. search info\
                \n3. forget someone\
                \n4. update info\
-               \n5. exit\n"
+               \n5. list all contact\
+               \n6. exit\n"
 
         print(start)
         choice = input('Your choice: ')
@@ -108,9 +132,12 @@ if __name__ == '__main__':
             contact.update()
 
         elif choice == '5':
+            contact.list()
+
+        elif choice == '6':
             contact.conn.close()
             print('Bye have a good time')
             sys.exit(0)
 
         else:
-            print('What???')
+            print('\n\nWhat???')
