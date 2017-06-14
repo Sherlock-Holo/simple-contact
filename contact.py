@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import sqlite3
 import sys
 
@@ -110,30 +111,15 @@ class Contact:
             print(contant.format(*p))
 
 
-if __name__ == '__main__':
-    if len(sys.argv) == 2:
-        if sys.argv[1] == ('-h' or '--help'):
-            # debug
-            print(sys.argv[1])
+# argparse
+parser = argparse.ArgumentParser(description='a simple contact')
+parser.add_argument('-f', '--dbfile', help='import your databse')
 
-            print('contact.py [db file]\
-                 \nTips: If you run contact.py first time, please run db_init.py at first\
-                 \n        -h --help    show this help and exit\
-                 \n        [db file]    use your database')
+args = parser.parse_args()
 
-            sys.exit(0)
-
-        else:
-            contact = Contact(sys.argv[1])
-
-    elif len(sys.argv) == 1:
-        contact = Contact()
-
-    else:
-        sys.exit(1)
-
-
+if args.dbfile:
     while True:
+        contact = Contact(args.dbfile)
         start = "\n\
                \n1. add new Contact Person\
                \n2. search info\
@@ -164,5 +150,35 @@ if __name__ == '__main__':
             print('Bye have a good time')
             sys.exit(0)
 
-        else:
-            print('\n\nWhat???')
+else:
+    while True:
+        contact = Contact()
+        start = "\n\
+               \n1. add new Contact Person\
+               \n2. search info\
+               \n3. forget someone\
+               \n4. update info\
+               \n5. list all contacts\
+               \n6. exit\n"
+
+        print(start)
+        choice = input('Your choice: ')
+        if choice == '1':
+            contact.add()
+
+        elif choice == '2':
+            contact.search()
+
+        elif choice == '3':
+            contact.delete()
+
+        elif choice == '4':
+            contact.update()
+
+        elif choice == '5':
+            contact.list()
+
+        elif choice == '6':
+            contact.conn.close()
+            print('Bye have a good time')
+            sys.exit(0)
