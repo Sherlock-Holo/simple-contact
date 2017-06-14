@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import sqlite3
 import sys
 
@@ -8,28 +9,32 @@ yellow = '\033[0;33m'
 puple = '\033[0;35m'
 backgroud = '\033[0m'
 
+title = (puple, backgroud)
+info = (yellow, backgroud)
+
 contant = "\n\033[0;35mname\033[0m: \033[0;33m{}\033[0m\
            \n\033[0;35mphone number\033[0m: \033[0;33m{}\033[0m\
            \n\033[0;35mother\033[0m: \033[0;33m{}\033[0m\n"
 
 
 class Contact:
+
     def __init__(self, db='contact.db'):
         self.db = db
         self.conn = sqlite3.connect(self.db)
         self.c = self.conn.cursor()
 
     def add(self):
-        name = input('Please input name: ')
-        phone_num = input('Please input phone_num: ')
-        other = input('Other messages?(optional) ')
+        name = input('{}Please input name:{} '.format(*title))
+        phone_num = input('{}Please input phone_num:{} '.format(*title))
+        other = input('{}Other messages?(optional){} '.format(*title))
         print('\n\n')
 
         contant = (name, phone_num, other)
         self.c.execute("INSERT INTO CONTACT VALUES(?, ?, ?)", contant)
         self.conn.commit()
 
-        print('info added')
+        print('{}contact added{}'.format(*title))
 
     def search(self):
         query = input('What do you want to search? ')
@@ -43,7 +48,6 @@ class Contact:
 
         else:
             print('Sorry~ No result')
-
 
     def delete(self):
         query = input('Who do you want to forget? ')
@@ -102,38 +106,22 @@ class Contact:
             print('ah? Who did you say?')
             return 0
 
-
-
     def list(self):
         self.c.execute("SELECT * FROM CONTACT")
         for p in self.c.fetchall():
             print(contant.format(*p))
 
 
-if __name__ == '__main__':
-    if len(sys.argv) == 2:
-        if sys.argv[1] == ('-h' or '--help'):
-            # debug
-            #print(sys.argv[1])
-
-            print('contact.py [db file]\
-                 \nTips: If you run contact.py first time, please run db_init.py at first\
-                 \n        -h --help    show this help and exit\
-                 \n        [db file]    use your database')
-
-            sys.exit(0)
-
-        else:
-            contact = Contact(sys.argv[1])
-
-    elif len(sys.argv) == 1:
-        contact = Contact()
-
-    else:
-        sys.exit(1)
+# argparse
+parser = argparse.ArgumentParser(description='a simple contact')
+parser.add_argument('-f', '--dbfile', help='import your databse')
 
 
+args = parser.parse_args()
+
+if args.dbfile:
     while True:
+        contact = Contact(args.dbfile)
         start = "\n\
                \n1. add new Contact Person\
                \n2. search info\
@@ -161,8 +149,44 @@ if __name__ == '__main__':
 
         elif choice == '6':
             contact.conn.close()
-            print('Bye have a good time')
+            print('Bye~ Have a good time')
             sys.exit(0)
 
         else:
-            print('\n\nWhat???')
+            print('\n\n? What do you want?')
+
+else:
+    while True:
+        contact = Contact()
+        start = "\n\
+               \n1. add new Contact Person\
+               \n2. search info\
+               \n3. forget someone\
+               \n4. update info\
+               \n5. list all contacts\
+               \n6. exit\n"
+
+        print(start)
+        choice = input('Your choice: ')
+        if choice == '1':
+            contact.add()
+
+        elif choice == '2':
+            contact.search()
+
+        elif choice == '3':
+            contact.delete()
+
+        elif choice == '4':
+            contact.update()
+
+        elif choice == '5':
+            contact.list()
+
+        elif choice == '6':
+            contact.conn.close()
+            print('Bye~ Have a good time')
+            sys.exit(0)
+
+        else:
+            print('\n\n? What do you want?')
