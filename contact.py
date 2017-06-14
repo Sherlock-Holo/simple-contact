@@ -15,6 +15,7 @@ contant = "\n\033[0;35mname\033[0m: \033[0;33m{}\033[0m\
 
 
 class Contact:
+
     def __init__(self, db='contact.db'):
         self.db = db
         self.conn = sqlite3.connect(self.db)
@@ -44,7 +45,6 @@ class Contact:
 
         else:
             print('Sorry~ No result')
-
 
     def delete(self):
         query = input('Who do you want to forget? ')
@@ -102,8 +102,6 @@ class Contact:
         else:
             print('ah? Who did you say?')
             return 0
-
-
 
     def list(self):
         self.c.execute("SELECT * FROM CONTACT")
