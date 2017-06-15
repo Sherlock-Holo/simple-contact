@@ -70,12 +70,12 @@ class Contact:
         ask = input("{}Do you want to forget him/her? tell me (Y)es or (N)o:{} ".format(*title_color))
         print('\n\n')
 
-        if ask.lower() == ('yes' or 'y'):
+        if ask.lower() in ('yes', 'y'):
             self.c.execute("DELETE FROM CONTACT WHERE NAME = ?", (query,))
             self.conn.commit()
             print('{}You just have forgotten someone{}'.format(*info_color))
 
-        elif ask.lower() == ('no' or 'n'):
+        elif ask.lower() in ('no', 'n'):
             print("{}You still can't forget him/her, right?{}".format(*info_color))
 
     def update(self):
@@ -182,8 +182,10 @@ def main(*dbfile):
         else:
             print('\n\n{}? What do you want?{}'.format(*title_color))
 
-if args.dbfile:
-    main(args.dbfile)
 
-else:
-    main()
+if __name__ == '__main__':
+    if args.dbfile:
+        main(args.dbfile)
+
+    else:
+        main()
