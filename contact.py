@@ -140,6 +140,40 @@ class Contact:
         for p in self.c.fetchall():
             print(contant.format(*p))
 
+    def start_polling(self):
+        while True:
+            start = "{}\n\
+                   \n1. add new Contact Person\
+                   \n2. search info\
+                   \n3. forget someone\
+                   \n4. update info\
+                   \n5. list all contacts\
+                   \ne. exit\n{}".format(*title_color)
+
+            print(start)
+            choice = input('{}Your choice:{} '.format(*info_color))
+            if choice == '1':
+                self.add()
+
+            elif choice == '2':
+                self.search()
+
+            elif choice == '3':
+                self.delete()
+
+            elif choice == '4':
+                self.update()
+
+            elif choice == '5':
+                self.list()
+
+            elif choice.lower() == 'e':
+                self.conn.close()
+                print('{}Bye~ Have a good time{}'.format(*info_color))
+                sys.exit(0)
+
+            else:
+                print('\n\n{}? What do you want?{}'.format(*title_color))
 
 # argparse
 parser = argparse.ArgumentParser(description='a simple contact')
@@ -148,52 +182,11 @@ parser.add_argument('-f', '--dbfile', help='import your databse')
 args = parser.parse_args()
 
 
-# main
-def main(*dbfile):
-    if len(dbfile) == 0:
-        contact = Contact()
-
-    else:
-        contact = Contact(dbfile[0])
-    while True:
-
-        start = "{}\n\
-               \n1. add new Contact Person\
-               \n2. search info\
-               \n3. forget someone\
-               \n4. update info\
-               \n5. list all contacts\
-               \ne. exit\n{}".format(*title_color)
-
-        print(start)
-        choice = input('{}Your choice:{} '.format(*info_color))
-        if choice == '1':
-            contact.add()
-
-        elif choice == '2':
-            contact.search()
-
-        elif choice == '3':
-            contact.delete()
-
-        elif choice == '4':
-            contact.update()
-
-        elif choice == '5':
-            contact.list()
-
-        elif choice.lower() == 'e':
-            contact.conn.close()
-            print('{}Bye~ Have a good time{}'.format(*info_color))
-            sys.exit(0)
-
-        else:
-            print('\n\n{}? What do you want?{}'.format(*title_color))
-
-
 if __name__ == '__main__':
     if args.dbfile:
-        main(args.dbfile)
+        contact = Contact(args.dbfile)
+        contact.start_polling()
 
     else:
-        main()
+        contact = Contact()
+        contact.start_polling()
