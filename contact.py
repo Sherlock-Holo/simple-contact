@@ -45,16 +45,24 @@ class Contact:
     def search(self):
         query = input('{}What do you want to search?{} '.format(*title_color))
         print('\n\n')
-        query = (query, query, query)
+        query = ('%{}%'.format(query), '%{}%'.format(query), '%{}%'.format(query))
         self.c.execute(
-            "SELECT * FROM CONTACT WHERE NAME = ? COLLATE NOCASE OR PHONE_NUM = ? COLLATE NOCASE OR OTHER = ? COLLATE NOCASE", query)
-        result = self.c.fetchone()
+            "SELECT * FROM CONTACT WHERE NAME LIKE ? COLLATE NOCASE OR PHONE_NUM LIKE ? COLLATE NOCASE OR OTHER LIKE ? COLLATE NOCASE", query)
+
+        for r in self.c.fetchall():
+            if type(r) == tuple:
+                print(contant.format(*r))
+
+            else:
+                continue
+
+        '''result = self.c.fetchone()
 
         if type(result) == tuple:
             print(contant.format(*result))
 
         else:
-            print('{}Sorry~ No result{}'.format(*info_color))
+            print('{}Sorry~ No result{}'.format(*info_color))'''
 
     def delete(self):
         query = input('{}Who do you want to forget?{} '.format(*title_color))
@@ -137,8 +145,8 @@ class Contact:
 parser = argparse.ArgumentParser(description='a simple contact')
 parser.add_argument('-f', '--dbfile', help='import your databse')
 
-
 args = parser.parse_args()
+
 
 # main
 def main(*dbfile):
