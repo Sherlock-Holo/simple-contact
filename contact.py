@@ -8,6 +8,7 @@ import sys
 yellow = '\033[0;33m'
 puple = '\033[0;35m'
 backgroud = '\033[0m'
+white = '\033[0;37m'
 
 title_color = (puple, backgroud)
 info_color = (yellow, backgroud)
@@ -46,23 +47,24 @@ class Contact:
         query = input('{}What do you want to search?{} '.format(*title_color))
         print('\n\n')
         query = ('%{}%'.format(query), '%{}%'.format(query), '%{}%'.format(query))
+
+        result = []
         self.c.execute(
             "SELECT * FROM CONTACT WHERE NAME LIKE ? COLLATE NOCASE OR PHONE_NUM LIKE ? COLLATE NOCASE OR OTHER LIKE ? COLLATE NOCASE", query)
 
         for r in self.c.fetchall():
             if type(r) == tuple:
-                print(contant.format(*r))
+                result.append(r)
 
             else:
                 continue
 
-        '''result = self.c.fetchone()
-
-        if type(result) == tuple:
-            print(contant.format(*result))
+        if len(result) != 0:
+            for contact in result:
+                print(contant.format(*contact))
 
         else:
-            print('{}Sorry~ No result{}'.format(*info_color))'''
+            print("{}There's nothing here{}".format(*info_color))
 
     def delete(self):
         query = input('{}Who do you want to forget?{} '.format(*title_color))
