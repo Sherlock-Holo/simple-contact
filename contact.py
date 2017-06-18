@@ -17,8 +17,8 @@ contant = "\n\033[0;35mname\033[0m: \033[0;33m{}\033[0m\
            \n\033[0;35mphone number\033[0m: \033[0;33m{}\033[0m\
            \n\033[0;35mother\033[0m: \033[0;33m{}\033[0m\n"
 
-def _input(_contant):
-    print("{}{}{}".format(puple, _contant, white), end='')
+def _input(_contant, color=puple):
+    print("{}{}{}".format(color, _contant, white), end='')
     result = input()
     print("".format(backgroud))
     return result
@@ -150,15 +150,17 @@ class Contact:
         for p in self.c.fetchall():
             print(contant.format(*p))
 
-    def start_polling(self):
+    def start_job(self):
         while True:
             start = "{}\n\
+                   \n----------------------------------------------------------\
                    \n1. add new Contact Person\
                    \n2. search info\
                    \n3. forget someone\
                    \n4. update info\
                    \n5. list all contacts\
-                   \ne. exit\n{}".format(*title_color)
+                   \ne. exit\
+                   \n----------------------------------------------------------\n{}".format(*info_color)
 
             print(start)
             choice = _input('Your choice: ')
@@ -195,8 +197,8 @@ args = parser.parse_args()
 if __name__ == '__main__':
     if args.dbfile:
         contact = Contact(args.dbfile)
-        contact.start_polling()
+        contact.start_job()
 
     else:
         contact = Contact()
-        contact.start_polling()
+        contact.start_job()
