@@ -95,14 +95,13 @@ class Contact:
             print("{}You still can't forget him/her, right?{}".format(*info_color))
 
     def update(self):
-        name = _input('{}You have new info about who?{} '.format(title_color))
+        name = _input('You have new info about who? ')
         self.c.execute("SELECT * FROM CONTACT WHERE NAME = ?", (name,))
         result = self.c.fetchone()
         if type(result) == tuple:
             print(contant.format(*result))
 
-            new_contant = _input(
-                '{}What do you want to update, name, phone or other?{} '.format(title_color))
+            new_contant = _input('What do you want to update, name, phone or other? ')
 
             if new_contant == 'name':
                 new_name = _input('tell me new name: ')
@@ -112,6 +111,7 @@ class Contact:
 
                 else:
                     print("{}You haven't change anything{}".format(*info_color))
+                    return 0
 
             elif new_contant == 'phone':
                 new_ph_num = _input('tell me new phone number: ')
@@ -121,6 +121,7 @@ class Contact:
 
                 else:
                     print("{}You haven't change anything{}".format(*info_color))
+                    return 0
 
             elif new_contant == 'other':
                 new_other = _input('tell me new other messages: ')
@@ -130,17 +131,18 @@ class Contact:
 
                 else:
                     print("{}You haven't change anything{}".format(*info_color))
+                    return 0
 
             else:
-                print("{}? what did you say? I don't know{}".format(title_color))
+                print("{}? what did you say? I don't know{}".format(*title_color))
                 return 0
 
             self.conn.commit()
-            print('\n\n')
-            print('{}info updated{}'.format(info_color))
+            print('\n')
+            print('{}info updated{}'.format(*info_color))
 
         else:
-            print('{}ah? Who did you say?{}'.format(title_color))
+            print('{}ah? Who did you say?{}'.format(*title_color))
             return 0
 
     def list(self):
