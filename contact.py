@@ -17,6 +17,7 @@ contant = "\n\033[0;35mname\033[0m: \033[0;33m{}\033[0m\
            \n\033[0;35mphone number\033[0m: \033[0;33m{}\033[0m\
            \n\033[0;35mother\033[0m: \033[0;33m{}\033[0m\n"
 
+
 def _input(_contant, color=puple):
     print("{}{}{}".format(color, _contant, white), end='')
     result = input()
@@ -101,9 +102,9 @@ class Contact:
         if type(result) == tuple:
             print(contant.format(*result))
 
-            new_contant = _input('What do you want to update, name, phone or other? ')
+            new_contant = _input('What do you want to update? (n)ame, (p)hone or (o)ther? ')
 
-            if new_contant == 'name':
+            if new_contant.lower() in ('name', 'n'):
                 new_name = _input('tell me new name: ')
                 if new_name:
                     self.c.execute("UPDATE CONTACT SET NAME = ? WHERE NAME = ?",
@@ -113,7 +114,7 @@ class Contact:
                     print("{}You haven't change anything{}".format(*info_color))
                     return 0
 
-            elif new_contant == 'phone':
+            elif new_contant.lower() in ('phone', 'p'):
                 new_ph_num = _input('tell me new phone number: ')
                 if new_ph_num:
                     self.c.execute("UPDATE CONTACT SET PHONE_NUM = ? WHERE NAME = ?",
@@ -123,7 +124,7 @@ class Contact:
                     print("{}You haven't change anything{}".format(*info_color))
                     return 0
 
-            elif new_contant == 'other':
+            elif new_contant.lower() in ('other', 'o'):
                 new_other = _input('tell me new other messages: ')
                 if new_other:
                     self.c.execute("UPDATE CONTACT SET OTHER = ? WHERE NAME = ?",
