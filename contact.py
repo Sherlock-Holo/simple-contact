@@ -13,6 +13,7 @@ white = '\033[0;37m'
 title_color = (puple, backgroud)
 info_color = (yellow, backgroud)
 
+
 contant = "\n\033[0;35mname\033[0m: \033[0;33m{}\033[0m\
            \n\033[0;35mphone number\033[0m: \033[0;33m{}\033[0m\
            \n\033[0;35mother\033[0m: \033[0;33m{}\033[0m\n"
